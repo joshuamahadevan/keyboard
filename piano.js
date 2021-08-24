@@ -3,30 +3,37 @@ const piano=document.querySelector(".piano")
 function addOctaveHTML(octave){
     piano.innerHTML+=`
 <div class="section">                
-    <div class="white-key" onclick="playnote('C',${octave})" > C${octave} </div>
-    <div class="white-key" onclick="playnote('D',${octave})" > D${octave} </div>
-    <div class="white-key" onclick="playnote('E',${octave})" > E${octave} </div>
+    <div class="white-key keys" onclick="playnote('C',${octave})" > <p> C${octave} </p> </div>
+    <div class="white-key keys" onclick="playnote('D',${octave})" > <p> D${octave} </p></div>
+    <div class="white-key keys" onclick="playnote('E',${octave})" > <p> E${octave} </p></div>
 
-    <div style="min-width:20%; left:20%;"class="black-key" onclick="playnote('C#',${octave})" > C#${octave} </div>
-    <div style="min-width:20%; right:20%;"class="black-key" onclick="playnote( 'D#',${octave})" > D#${octave} </div>
+    <div style="min-width:calc( var(--key-width) *.8); left:calc( var(--key-width) *.6);" class="black-key keys" onclick="playnote('C#',${octave})" > C#${octave} </div>
+    <div style="min-width:calc( var(--key-width) *.8); right:calc( var(--key-width) *.6);"class="black-key keys" onclick="playnote( 'D#',${octave})" > D#${octave} </div>
 </div>
 <div class="section"> 
-    <div class="white-key" onclick="playnote('F',${octave})"> F${octave} </div>
-    <div class="white-key" onclick="playnote('G',${octave})" > G${octave} </div>
-    <div class="white-key" onclick="playnote('A',${octave})" "> A${octave} </div>
-    <div class="white-key" onclick="playnote('B',${octave})" "> B${octave} </div>
+    <div class="white-key keys" onclick="playnote('F',${octave})"> <p> F${octave} </p></div>
+    <div class="white-key keys" onclick="playnote('G',${octave})" > <p> G${octave} </p></div>
+    <div class="white-key keys" onclick="playnote('A',${octave})" "> <p> A${octave} </p></div>
+    <div class="white-key keys" onclick="playnote('B',${octave})" "> <p> B${octave} </p></div>
 
-    <div style="left:14.2%; min-width: 14.2%;"class="black-key" onclick="playnote('F#',${octave})"> F#${octave} </div>
-    <div style="right:42.6%; min-width: 14.2%;"class="black-key" onclick="playnote('G#',${octave})"> G#${octave} </div>
-    <div style="right:14.2%; min-width: 14.2%;"class="black-key" onclick="playnote('A#',${octave})"> A#${octave} </div>
+    <div style="min-width:calc( var(--key-width) *.8); left:calc( var(--key-width) *.6);" class="black-key keys" onclick="playnote('F#',${octave})"> F#${octave} </div>
+    <div style="min-width:calc( var(--key-width) *.8); left:calc( var(--key-width) *2);" class="black-key keys" onclick="playnote('G#',${octave})"> G#${octave} </div>
+    <div style="min-width:calc( var(--key-width) *.8); right:calc( var(--key-width) *.6);" class="black-key keys" onclick="playnote('A#',${octave})"> A#${octave} </div>
 </div>`
 
 }
 
-addOctaveHTML(5);
-addOctaveHTML(6);
-addOctaveHTML(7);
+var octave=4;
+var oct_disp=3  ;
 
+function rebuildBoard(){
+    piano.innerHTML='';
+    for (let i=octave; i<octave+oct_disp; i++){
+        addOctaveHTML(i);
+    }
+    piano.innerHTML+=`<div class="section"> <div class="white-key" onclick="playnote('C',${octave+oct_disp})" > <p> C${octave+oct_disp} </p> </div></div>`
+    updateEventListeners();
+}
 var context=new AudioContext();
 var o=null;
 var g=null;
@@ -87,4 +94,50 @@ function playnote(note,octave){
     console.log(`playing ${note}${octave} of frequencey ${frequency}`)
 
     Play(frequency,"sine")
+}
+
+function resize(){
+    if(innerWidth<550){
+            oct_disp=1;
+            document.documentElement.style.setProperty("--key-width","8vw")
+            rebuildBoard()
+    }else if(innerWidth<850){
+        if(oct_disp!=1){
+            oct_disp=1;
+            document.documentElement.style.setProperty("--key-width","7vw")
+            rebuildBoard()
+        }
+    }else if(innerWidth<1300){
+        if(oct_disp!=2){
+            oct_disp=2;
+            document.documentElement.style.setProperty("--key-width","4vw")
+            rebuildBoard()
+        }
+
+    }else{
+        if(oct_disp!=3){
+            oct_disp=3;
+            document.documentElement.style.setProperty("--key-width","3vw")
+            rebuildBoard()
+        }
+    }
+}
+addEventListener("resize",resize)
+
+resize()
+rebuildBoard();
+
+function updateEventListeners(){
+    const keys=document.querySelectorAll(".keys")
+    keys.forEach((key)=>{
+        key.addEventListener("mousedown", (e)=>{
+            e.target.style.transform="scale(0.9, 0.97)"
+        })
+    })
+
+    keys.forEach((key)=>{
+        key.addEventListener("mouseup", (e)=>{
+            e.target.style.transform=""
+        })
+    })
 }
