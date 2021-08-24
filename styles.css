@@ -1,0 +1,51 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.app {
+    min-height: 100%; 
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;   
+}
+
+.piano{
+    display: flex;
+
+    min-height: 40vh;
+    background-color: lavender;
+}
+
+.section{
+    margin: 0;
+    padding: 0;
+    position: relative;
+    display: flex;
+}
+
+.white-key{
+    user-select: none;
+    min-width:2.2vw ;
+    min-height: 90%;
+    border:solid rgb(240, 195, 128) 5px;
+    background-color: blanchedalmond;
+    color: black;
+
+
+    border-radius: .3vw;
+}
+
+.black-key{
+    user-select: none;
+
+    position: absolute;
+    top:0;
+    min-height: 60%;
+    background-color: saddlebrown;
+
+    border:solid rgb(235, 145, 71) ;
+    border-radius: .3vw;
+}
